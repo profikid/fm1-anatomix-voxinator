@@ -31,6 +31,7 @@ jobs:
       contents: write
     outputs:
       version: ${{ steps.version.outputs.version }}
+      published: ${{ steps.release.outputs.published }}
     steps:
       - name: The version
         id: version
@@ -44,6 +45,7 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Prepare a draft without replacing a public release
+        id: release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -57,14 +59,24 @@ jobs:
           flags=(--prerelease=false)
           if [[ "$version" == *-* ]]; then flags=(--prerelease --latest=false); fi
           if draft=$(gh release view "$GITHUB_REF_NAME" --json isDraft --jq .isDraft); then
-            [[ "$draft" == true ]] || { echo 'Refusing to rebuild a public release'; exit 1; }
+            if [[ "$draft" == true ]]; then
+              echo "published=false" >> "$GITHUB_OUTPUT"
+            else
+              # The release is already public. It is not rebuilt: its packages are attested and
+              # published, and a fresh build would replace them. The run goes on: the packages are
+              # checked again where they are, and the site is built from the published release.
+              echo "The release $GITHUB_REF_NAME is already public: it is not rebuilt."
+              echo "published=true" >> "$GITHUB_OUTPUT"
+            fi
           else
             gh release create "$GITHUB_REF_NAME" --verify-tag --draft \
               --title "$TITLE $version" --generate-notes "${flags[@]}"
+            echo "published=false" >> "$GITHUB_OUTPUT"
           fi
 
   firmware:
     needs: prepare
+    if: needs.prepare.outputs.published != 'true'
     # The Firmware Hub recognises attestations from this reviewed builder tag.
     uses: zvenson/fm1-build/.github/workflows/build.yml@v1
     permissions:
@@ -104,7 +116,10 @@ jobs:
       packages: build/release-assets/*
 
   verify:
-    needs: firmware
+    needs: [prepare, firmware]
+    # the packages are the ones of this build, or - when the release is already public and was not
+    # rebuilt - the ones that were published with it
+    if: always() && needs.prepare.result == 'success' && (needs.firmware.result == 'success' || needs.prepare.outputs.published == 'true')
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -112,10 +127,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
+      - name: The packages (from the build of this run)
+        if: needs.firmware.result == 'success'
+        uses: actions/download-artifact@v4
         with:
           name: packages
           path: build/attested
+
+      - name: The packages (from the published release)
+        if: needs.firmware.result != 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          # the same layout the artifact has: the packages under build/release-assets, the checksums
+          # at the top (the builder's SHA256SUMS names the packages that way)
+          mkdir -p build/attested/build/release-assets
+          gh release download "$GITHUB_REF_NAME" --pattern "anatomix-*" --dir build/attested/build/release-assets --clobber
+          (cd build/attested && sha256sum build/release-assets/anatomix-* > SHA256SUMS)
 
       - name: Verify checksums and signed source provenance
         working-directory: build/attested
@@ -155,7 +185,7 @@ jobs:
 
   site:
     needs: [prepare, verify]
-    if: startsWith(github.ref, 'refs/tags/')
+    if: always() && startsWith(github.ref, 'refs/tags/') && needs.prepare.result == 'success' && needs.verify.result == 'success'
     permissions:
       contents: read
       pages: write
@@ -163,4 +193,6 @@ jobs:
     uses: ./.github/workflows/pages.yml
     with:
       version: ${{ needs.prepare.outputs.version }}
-      package-from: artifact
+      # the attested package of this build, or - when the release was already public and was not
+      # rebuilt - the one that was published with it
+      package-from: ${{ needs.prepare.outputs.published == 'true' && 'release' || 'artifact' }}
