@@ -518,7 +518,9 @@ void an_head_draw(const anatomy_in_t *in, int32_t x, int32_t y, int32_t w, int32
     }
     an_map(x, y, w, h, sx, sy, sw, sh, face, 14);
     an_curve(face, 14, AN_BONE);
-    for (i = 0; i < 14; i++) {
+    /* the profile's own segments: thirteen of them, for fourteen points (the last point's successor
+     * would be past the array) */
+    for (i = 0; i < 13; i++) {
         int32_t fx = (int32_t)face[i * 2], fy = (int32_t)face[i * 2 + 1];
         int32_t gx = (int32_t)face[(i + 1) * 2], gy = (int32_t)face[(i + 1) * 2 + 1];
         cv_line(fx, fy + 1, gx, gy + 1, an_fade(AN_BONE, AN_TISSUE, 0.35f));

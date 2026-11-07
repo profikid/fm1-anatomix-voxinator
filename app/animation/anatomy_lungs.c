@@ -136,7 +136,9 @@ void anatomy_draw_lungs(anatomy_t *a, const anatomy_in_t *in, int32_t x, int32_t
         }
         an_map(x, y, w, h, 0, 0, 240, 176, dia, 5);
         an_curve(dia, 5, AN_CORAL);
-        for (i = 0; i < 4; i++)
+        /* the ribs: the chords that skip a point of the dome (point i to point i+2), so the last one
+         * starts at point 2: the dome has five points and the chords need two of them each */
+        for (i = 0; i < 3; i++)
             cv_line((int32_t)dia[i * 2], (int32_t)dia[i * 2 + 1] + 2, (int32_t)dia[i * 2 + 4],
                     (int32_t)dia[i * 2 + 5] + 2, an_fade(AN_CORAL, AN_DARK, 0.45f));
     }
