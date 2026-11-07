@@ -79,7 +79,10 @@ jobs:
           set -euo pipefail
           mkdir -p app/build
           # the attested package of this release, not a build here
+          # (the artifact keeps its own layout: the files can be flat or under the path they were
+          # uploaded from, so both are looked for)
           for src in build/attested/build/release-assets/anatomix-"$VERSION".fwsc \
+                     build/attested/anatomix-"$VERSION".fwsc \
                      build/package/anatomix-"$VERSION".fwsc; do
             if [ -f "$src" ]; then cp "$src" app/build/; echo "package: $src"; exit 0; fi
           done
