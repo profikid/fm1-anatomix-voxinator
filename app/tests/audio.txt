@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: MPL-2.0
+# ANATOMIX VOXINATOR: the microphone path in the host simulator.
+#   python3 tests/make_tone.py app/build/audio
+#   app/build/host/anatomix_host app/tests/audio.txt app/build/audio
+#
+# The tones are the capture of a USB microphone: a 220 Hz sine (A3) as mono at 44.1 kHz, as
+# stereo at 48 kHz and as mono at 48 kHz. The engine must hear A3 (note 57) in all three, and it
+# must hear it at the right pitch: the converter turns the device's rate into the engine's.
+
+wavin sine_mono_44100.wav
+wait 2500
+expect mic_state 2
+expect mic_rate 44100
+expect f0 >2195
+expect f0 <2205
+expect note 57
+expect voiced 1
+expect level > 100
+expect block > 100
+wavin
+
+wavin sine_stereo_48000.wav
+wait 2500
+expect mic_state 2
+expect mic_rate 48000
+expect f0 >2195
+expect f0 <2205
+expect note 57
+expect voiced 1
+expect level > 100
+expect block > 100
+wavin
+
+wavin sine_mono_48000.wav
+wait 2500
+expect mic_state 2
+expect mic_rate 48000
+expect f0 >2195
+expect f0 <2205
+expect note 57
+expect voiced 1
+expect level > 100
+expect block > 100
+wavin
+
+# the microphone is gone: the engine falls silent and the anatomy breathes on its own
+wait 500
+expect mic_state 0
+expect level <10

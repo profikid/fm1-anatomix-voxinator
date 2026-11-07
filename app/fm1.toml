@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: MPL-2.0
+# ANATOMIX VOXINATOR's build settings (fm1-base's tools/build.py: ../build.sh)
+name = "ANATOMIX"             # the build's files: anatomix.fwsc, anatomix-X.Y.fwsc
+id_prefix = "FM-1_93"         # package identity (each firmware its own): dev FM-1_9300
+usb_manufacturer = "ANATOMIX"
+usb_product = "ANATOMIX VOXINATOR FM-1"
+usb_host = true               # the USB microphone: the FM-1 is the USB host (Phase 1)
+usb_audio_in = false           # the FM-1 as a USB audio device to the computer: off for now
+usb_audio_out = false
+ble = true                     # Bluetooth MIDI
+ble_stack = "own"              # fm1-base's own stack: nothing of JieLi's
+words = "words.tsv"
+include = ["dsp", "ui", "animation"]
+o2 = ["dsp/*.c"]               # the engine at -O2, the platform and the screens at -Oz
+unity_opt = "z"
+boot_pack = true
+# the site (tools/make_site.py)
+tagline = "Operate the human voice like a synthesizer"
+repo = "https://github.com/profikid/fm1-anatomix-voxinator"
+licence = "MPL-2.0"
+credits = "Built on fm1-base and felucca-bsp, from Felucca by Leo Kuroshita (Hügelton Instruments)."

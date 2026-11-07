@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: MPL-2.0
+# ANATOMIX VOXINATOR's words for a screen reader (fm1-reader): the text on the screen <TAB> what to say.
+# url: https://charlesvestal.github.io/fm1-base/words/
+ANATOMIX	anatomix
+K1 VOICE COUNT	knob 1, voice count
+K2 SPREAD	knob 2, spread
+K3 WET DRY	knob 3, wet dry
+K4 FX MACRO	knob 4, effect macro
+K1 RETUNE	knob 1, retune
+K2 GLIDE	knob 2, glide
+K3 HUMANIZE	knob 3, humanize
+K4 MIX	knob 4, mix
+K1 FORMANT	knob 1, formant
+K2 THROAT	knob 2, throat
+K3 NASAL	knob 3, nasal
+K4 PRESERVE	knob 4, preserve
+K1 HARMONY	knob 1, harmony
+K3 DETUNE	knob 3, detune
+K1 DRIVE	knob 1, drive
+K2 TONE	knob 2, tone
+K4 MOVE	knob 4, move
+K1 BROWSE	knob 1, browse
+K2 CATEGORY	knob 2, category
+K3 LOAD	knob 3, load
+K4 SAVE	knob 4, save
+K1 GAIN	knob 1, gain
+K2 MONITOR	knob 2, monitor
+K3 FORMAT	knob 3, format
+K4 HOST	knob 4, host
+K1 MIDI	knob 1, midi
+K2 OUT	knob 2, output
+K3 THEME	knob 3, theme
+K4 VERSION	knob 4, version
+MULTIVOICE	multivoice
+GLIDE	glide
+FORMANT	formant
+PRESETS	presets
+INPUT	input
+GLOBAL	global
+HOME	home
+MIC	microphone
+NO MIC	no microphone
+OVERLOAD	overload

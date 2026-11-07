@@ -1,0 +1,89 @@
+# SPDX-License-Identifier: MPL-2.0
+# ANATOMIX VOXINATOR: the screens, one PNG each, in the host simulator.
+#   app/build/host/anatomix_host app/tests/screens.txt app/build/shots
+# The script's language is documented in base/host/plat_host.c's header comment.
+#
+# Every screen is visited and shot, so the anatomical picture can be looked at (the host's PNG is
+# the 240 x 240 panel). The knobs are turned a little on the way, so the shots show the picture
+# reacting rather than sitting still.
+
+# the instrument comes up on the anatomical overview (the factory's preset is in GLIDE)
+wait 1200
+expect page 0
+expect mode 1
+shot 01_home.png
+
+# the LFO button opens the multivoice page: the extra voices are ghosted beside the original
+tap LFO
+wait 200
+expect page 1
+turn K1 2                      # three voices
+wait 300
+shot 02_multivoice.png
+
+# the ARP button flips the engine's mode: it lands on the multivoice page in MULTIVOICE and on the
+# glide page in GLIDE
+# (the script taps the buttons: "press" holds one down, and a held button has no second edge)
+tap ARP
+wait 200
+expect mode 0
+expect page 1
+tap ARP
+wait 200
+expect mode 1
+expect page 2
+turn K2 3                      # a longer glide
+wait 300
+shot 03_glide.png
+
+# the EDIT button opens the vocal tract: the same picture, seen close
+tap EDIT
+wait 200
+expect page 3
+turn K1 5                      # the formant up: the tract shortens
+wait 300
+shot 04_formant_up.png
+
+# the SEL button opens the preset browser; loading a factory preset puts the formant back
+tap SEL
+wait 200
+expect page 5
+turn K1 0                      # the first factory preset
+turn K3 1                      # LOAD
+wait 300
+shot 05_presets.png
+
+tap EDIT
+wait 300
+expect page 3
+shot 06_formant.png
+
+# the FX button opens the effects chain
+tap FX
+wait 200
+expect page 4
+turn SELECT 1                 # the second slot
+wait 200
+shot 07_fx.png
+
+# the ENV button opens the input's own page
+tap ENV
+wait 200
+expect page 6
+turn K1 3                      # more gain
+wait 200
+shot 08_input.png
+
+# the GLO button opens the system's own page
+tap GLO
+wait 200
+expect page 7
+turn K3 1                      # the next theme
+wait 200
+shot 09_global.png
+
+# back home, with the picture still alive
+tap HOME
+wait 400
+expect page 0
+shot 10_home_again.png
