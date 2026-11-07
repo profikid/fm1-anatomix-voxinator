@@ -1,0 +1,153 @@
+<!-- ANATOMIX VOXINATOR's control map (tools/site_style.py puts it in the manual's "The control map" section).
+     Its data is the PAGES list below: keep it in step with app/ui/ui_common.c (ui_knob_name) and the button
+     handling in the same file when a page's controls change. -->
+<style>
+.cmap { container-type: inline-size; display: grid; gap: 26px; margin: 8px 0 12px; }
+.cmap > div { min-width: 0; }
+.cmap h3 { margin: 0 0 10px; }
+.cmap .picker { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 7px; }
+.cmap .pbtn {
+  display: grid; gap: 2px; width: 100%;
+  background: var(--panel); border: 1px solid var(--line); color: var(--fg); padding: 9px 11px; border-radius: 7px;
+  font: inherit; text-align: left; cursor: pointer;
+}
+.cmap .pbtn:hover { border-color: var(--faint); }
+.cmap .pbtn[aria-pressed="true"] { border-color: var(--amber); background: var(--raise); }
+.cmap .cap {
+  font: 600 10.5px var(--f-mono); letter-spacing: .09em; text-align: center; padding: 4px 0; border-radius: 4px;
+  background: #20252f; color: var(--hot); box-shadow: inset 0 -2px 0 #0a0d12;
+}
+.cmap .pbtn[aria-pressed="true"] .cap { background: var(--amber); color: #1a1206; }
+.cmap .pname { font: 600 14.5px/1.25 var(--f-display); letter-spacing: .04em; }
+.cmap .pname small { display: block; font: 12px var(--f-body); color: var(--dim); }
+.cmap .knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; margin-top: 14px; }
+.cmap .knob {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px;
+}
+.cmap .knob b { display: block; font: 600 11px var(--f-mono); letter-spacing: .1em; color: var(--amber); margin-bottom: 5px; }
+.cmap .knob span { font: 500 15px var(--f-display); letter-spacing: .05em; color: var(--fg); }
+.cmap .panel {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+}
+.cmap .rows { display: grid; gap: 9px; }
+.cmap .row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.cmap .row > .lbl { font: 500 10.5px var(--f-mono); letter-spacing: .1em; color: var(--faint); width: 74px; flex: none; }
+.cmap .chip {
+  font: 600 11px var(--f-mono); letter-spacing: .06em; padding: 6px 10px; border-radius: 5px;
+  background: #20252f; color: var(--dim); border: 1px solid var(--line); white-space: nowrap;
+}
+.cmap .chip.on { background: var(--amber); color: #1a1206; border-color: var(--amber); }
+.cmap .chip.hot { background: var(--hot); color: #1a0a08; border-color: var(--hot); }
+.cmap .note { font-size: 13.5px; color: var(--dim); margin: 12px 0 0; }
+@media (max-width: 620px) { .cmap .row > .lbl { width: 100%; } }
+</style>
+
+<div class="cmap">
+  <div>
+    <h3>Pick a page</h3>
+    <div class="picker" id="cmap-picker"></div>
+    <div class="knobs" id="cmap-knobs"></div>
+  </div>
+
+  <div>
+    <h3>The panel</h3>
+    <div class="panel">
+      <div class="rows">
+        <div class="row"><span class="lbl">BUTTONS</span><span id="cmap-buttons"></span></div>
+        <div class="row"><span class="lbl">ENCODERS</span><span id="cmap-encoders"></span></div>
+      </div>
+      <p class="note" id="cmap-note"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ANATOMIX VOXINATOR's pages and their four knobs (app/ui/ui_common.c: ui_knob_name) */
+  var PAGES = [
+    { name: "HOME",      cap: "HOME",  by: "HOME", knobs: ["VOICE COUNT", "SPREAD", "WET/DRY", "FX MACRO"] },
+    { name: "MULTIVOICE", cap: "LFO",   by: "LFO, SEQ or ALGO", knobs: ["VOICE COUNT", "HARMONY", "DETUNE", "MIX"] },
+    { name: "GLIDE",     cap: "ARP",   by: "ARP or ALGO",  knobs: ["RETUNE", "GLIDE", "HUMANIZE", "MIX"] },
+    { name: "FORMANT",   cap: "EDIT",  by: "EDIT", knobs: ["FORMANT", "THROAT", "NASAL", "PRESERVE"] },
+    { name: "EFFECTS",   cap: "FX",    by: "FX",   knobs: ["FX P1", "FX P2", "FX P3", "MOVE"] },
+    { name: "PRESETS",   cap: "SEL",   by: "SEL",  knobs: ["BROWSE", "CATEGORY", "LOAD", "SAVE"] },
+    { name: "INPUT",     cap: "ENV",   by: "ENV",  knobs: ["GAIN", "MONITOR", "FORMAT", "HOST"] },
+    { name: "GLOBAL",    cap: "GLO",   by: "GLO",  knobs: ["MIDI", "OUT", "THEME", "VERSION"] }
+  ];
+  var BUTTONS = ["FX", "SEL", "ENV", "LFO", "EDIT", "GLO", "HOME", "SAVE", "ARP", "SEQ", "PLAY", "REC", "OCT-", "OCT+"];
+  var ENCODERS = ["SELECT", "ALGO", "PRESET", "K1", "K2", "K3", "K4"];
+  var NOTES = {
+    HOME: "The whole anatomy. This is where the instrument comes up.",
+    MULTIVOICE: "The vocal paths: the original and the voices built on it.",
+    GLIDE: "The folds, the detected pitch and the pitch it is pulled to.",
+    FORMANT: "The vocal tract, enlarged: the throat, the tongue, the nose.",
+    EFFECTS: "The four slots. MOVE moves the focused slot in the chain.",
+    PRESETS: "The sixteen factory presets and the sixteen of your own.",
+    INPUT: "The microphone: its gain, what it negotiated, the USB host's state.",
+    GLOBAL: "MIDI, the output level, the theme and the version."
+  };
+
+  var picker = document.getElementById("cmap-picker");
+  var knobs = document.getElementById("cmap-knobs");
+  var buttons = document.getElementById("cmap-buttons");
+  var encoders = document.getElementById("cmap-encoders");
+  var note = document.getElementById("cmap-note");
+  if (!picker || !knobs || !buttons || !encoders || !note) return;
+
+  function chip(text, cls) {
+    var s = document.createElement("span");
+    s.className = "chip" + (cls ? " " + cls : "");
+    s.textContent = text;
+    return s;
+  }
+
+  function draw(i) {
+    var p = PAGES[i];
+    Array.prototype.forEach.call(picker.children, function (b, n) {
+      b.setAttribute("aria-pressed", n === i ? "true" : "false");
+    });
+    knobs.innerHTML = "";
+    for (var k = 0; k < 4; k++) {
+      var box = document.createElement("div");
+      box.className = "knob";
+      var b = document.createElement("b");
+      b.textContent = "K" + (k + 1);
+      var s = document.createElement("span");
+      s.textContent = p.knobs[k];
+      box.appendChild(b);
+      box.appendChild(s);
+      knobs.appendChild(box);
+    }
+    buttons.innerHTML = "";
+    for (var j = 0; j < BUTTONS.length; j++) {
+      var on = BUTTONS[j] === p.cap;
+      buttons.appendChild(chip(BUTTONS[j], on ? "hot" : (BUTTONS[j] === "PLAY" || BUTTONS[j] === "REC" ? "" : "")));
+    }
+    encoders.innerHTML = "";
+    for (var e = 0; e < ENCODERS.length; e++) {
+      var isk = ENCODERS[e].charAt(0) === "K";
+      encoders.appendChild(chip(ENCODERS[e], isk ? "on" : ""));
+    }
+    note.textContent = NOTES[p.name] + " Opened by " + p.by + ".";
+  }
+
+  PAGES.forEach(function (p, i) {
+    var b = document.createElement("button");
+    b.className = "pbtn";
+    b.type = "button";
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    var cap = document.createElement("span");
+    cap.className = "cap";
+    cap.textContent = p.cap;
+    var name = document.createElement("span");
+    name.className = "pname";
+    name.textContent = p.name;
+    b.appendChild(cap);
+    b.appendChild(name);
+    b.addEventListener("click", function () { draw(i); });
+    picker.appendChild(b);
+  });
+
+  draw(0);
+})();
+</script>

@@ -1,0 +1,10 @@
+{
+  "what": "A vocal processor for the FM-1: a USB microphone goes in, and a corrected, harmonised, formant-shifted and effected voice comes out. The screen is an animated cross-section of a human head and throat that moves with the voice. Two engines: MULTIVOICE (the original plus up to three harmonised voices) and GLIDE (the detected pitch pulled to the nearest note of a key). Four reorderable effect slots, sixteen factory and sixteen user presets.",
+  "author": "Laurens Profittlich",
+  "kinds": [
+    "vocals"
+  ],
+  "play": "https://profikid.github.io/fm1-anatomix-voxinator/emu/",
+  "cheat": "https://profikid.github.io/fm1-anatomix-voxinator/manual/",
+  "image": "docs/img/card.png"
+}
