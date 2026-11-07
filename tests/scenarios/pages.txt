@@ -1,0 +1,56 @@
+# The instrument's own scripted run in fm1-base's host simulator.
+#   app/build/host/anatomix_host tests/scenarios/pages.txt app/build/scenarios
+# The script's language is documented in base/host/plat_host.c's header comment.
+
+# the instrument comes up on the anatomical overview
+wait 900
+expect page 0
+
+# the ALGO encoder switches between the two engines
+turn ALGO 1
+wait 40
+expect mode 0
+turn ALGO 1
+wait 40
+expect mode 1
+
+# the EDIT button opens the vocal tract
+press EDIT
+wait 60
+expect page 3
+press HOME
+wait 60
+expect page 0
+
+# the FX button opens the effects chain
+press FX
+wait 60
+expect page 4
+press HOME
+wait 60
+expect page 0
+
+# the PRESET encoder opens the browser
+turn PRESET 1
+wait 60
+expect page 6
+press HOME
+wait 60
+expect page 0
+
+# the knobs move the parameters
+turn K1 3
+wait 30
+turn K2 2
+wait 30
+expect voices 2
+
+# the octave buttons shift the pitch
+press OCT+
+wait 30
+press OCT-
+wait 30
+
+# the screen still lives
+wait 300
+shot pages.png

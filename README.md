@@ -8,6 +8,9 @@ cross-section of a human head and throat that reacts to everything you do.
 
 > *Operate the human voice like a synthesizer.*
 
+**The pull request:** https://github.com/profikid/fm1-anatomix-voxinator/pull/1
+**The platform's half (the USB microphone capture):** https://github.com/profikid/fm1-base/pull/1
+
 ---
 
 ## What it is
@@ -71,6 +74,8 @@ app/build/host/anatomix_host app/tests/screens.txt app/build/shots
 The microphone capture is **the platform's** work, not the app's: the FM-1 is the USB *host*, the capture
 lives in the SIE driver, and the app reads it through `plat_mic_*`. Those changes are in **fm1-base**, in
 the branch `feature/usb-mic-capture`:
+
+**https://github.com/profikid/fm1-base/pull/1**
 
 | file | what |
 |---|---|
