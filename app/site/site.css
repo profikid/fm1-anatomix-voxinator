@@ -1,0 +1,168 @@
+/* SPDX-License-Identifier: MPL-2.0
+   Copyright (C) 2026 Charles Vestal
+
+   ANATOMIX VOXINATOR's look for the site fm1-base's tools/make_site.py builds (tools/site_style.py puts it in
+   place of the platform's own style): a dark medical laboratory — the black of a light-free room, warm
+   anatomical pink and coral, bone for the outlines, amber and cyan for the instruments' readouts. The
+   typography is the instrument's own: Barlow Condensed for the headings, Barlow for the text, IBM Plex Mono
+   for the values. */
+
+:root {
+  --bg: #0b0e13;           /* the room */
+  --panel: #131922;        /* a card on the bench */
+  --raise: #1b222d;        /* the card that is lit */
+  --line: #27313f;         /* the edge of the tray */
+  --fg: #e7e2d6;           /* bone: the type */
+  --dim: #93a0b2;          /* the annotation lines */
+  --faint: #5b6675;
+  --amber: #f2a63c;        /* the instrument's amber readout */
+  --amber-soft: rgba(242, 166, 60, .12);
+  --hot: #ef6f5e;          /* anatomical coral: what is played */
+  --hot-soft: rgba(239, 111, 94, .13);
+  --cyan: #5cc6d4;         /* the second readout */
+  --bone: #e8e2d4;
+  --f-display: "Barlow Condensed", "Barlow Semi Condensed", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+
+html { background: var(--bg); }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  margin: 0;
+  font: 400 17px/1.62 var(--f-body);
+  padding-inline: 18px;
+  padding-block: 30px 72px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 1120px; margin: 0 auto; }
+main { max-width: 46rem; }
+main:focus { outline: none; }
+
+/* --- the header: the name, and the way to the other pages --- */
+header.site {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  max-width: 1120px;
+  margin: 0 auto 30px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+header.site .home {
+  font: 700 20px/1 var(--f-display);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg);
+  text-decoration: none;
+}
+header.site .home::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: var(--hot);
+  box-shadow: 0 0 12px var(--hot);
+  vertical-align: 1px;
+}
+header.site .home:hover { color: var(--amber); }
+header.site nav { margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px; }
+header.site nav a {
+  font: 500 12px/1 var(--f-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--dim);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+header.site nav a:hover { background: var(--raise); color: var(--fg); }
+header.site nav a[aria-current] { background: var(--amber); color: #1a1206; border-color: var(--amber); }
+#controls { display: block; scroll-margin-top: 84px; }
+
+@media (max-width: 700px) {
+  header.site nav { margin-left: 0; width: 100%; }
+}
+
+/* --- the type --- */
+h1, h2, h3 { font-family: var(--f-display); font-weight: 600; text-wrap: balance; line-height: 1.14; color: var(--fg); }
+h1 { font-size: clamp(34px, 5.6vw, 58px); margin: 0 0 12px; letter-spacing: .01em; }
+h2 {
+  font-size: clamp(24px, 3.4vw, 31px);
+  margin: 46px 0 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+h2 .num { color: var(--hot); margin-right: .55em; font-variant-numeric: tabular-nums; }
+h3 { font-size: 20px; margin: 34px 0 10px; color: var(--amber); }
+p, li { max-width: 70ch; }
+p { margin: 0 0 15px; }
+.lede { font-size: 19px; color: var(--dim); margin-bottom: 26px; max-width: 62ch; }
+ul, ol { padding-left: 1.25rem; margin: 0 0 18px; }
+li { margin: 5px 0; }
+li::marker { color: var(--amber); }
+strong { font-weight: 600; color: var(--hot); }
+em { color: var(--dim); }
+a { color: var(--fg); text-decoration-color: var(--amber); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+a:hover { color: var(--amber); }
+::focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.skip { position: absolute; left: 18px; top: -100px; background: var(--amber); color: #1a1206; padding: 9px 15px; border-radius: 0 0 6px 6px; z-index: 10; }
+.skip:focus { top: 0; }
+
+code, pre { font-family: var(--f-mono); font-size: .86em; }
+code { background: var(--raise); color: var(--hot); padding: .12em .4em; border-radius: 4px; }
+pre { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; line-height: 1.5; margin: 0 0 20px; }
+pre code { background: none; padding: 0; font-size: inherit; color: var(--fg); }
+hr { display: none; }
+
+/* --- the tables: the values, in the instrument's own lettering --- */
+.table { overflow-x: auto; margin: 0 0 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font: 500 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); background: var(--raise); }
+td:first-child { white-space: nowrap; font-family: var(--f-mono); font-size: 13px; color: var(--amber); }
+td strong { color: var(--fg); }
+
+/* --- the boxes --- */
+.status { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--amber); border-radius: 0 8px 8px 0; padding: 13px 17px; margin: 0 0 20px; }
+.status p { margin: 0; }
+.callout { border-left: 3px solid var(--hot); background: var(--hot-soft); padding: 11px 17px; margin: 0 0 20px; max-width: 70ch; border-radius: 0 8px 8px 0; }
+.callout p { margin: 0; }
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 0 16px; margin: 0 0 20px; }
+details > summary { cursor: pointer; padding: 11px 0; font-family: var(--f-display); font-weight: 600; }
+details[open] > summary { margin-bottom: 6px; }
+details > :last-child { margin-bottom: 14px; }
+.swatch { display: inline-block; width: .72em; height: .72em; margin-right: .4em; vertical-align: .02em; }
+
+/* --- the way home --- */
+a.home { color: inherit; text-decoration: none; }
+main > a.home { display: inline-block; font: 500 12px var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin: 0 0 8px; }
+
+/* --- the contents: the section on screen is marked --- */
+nav.contents { margin: 0 0 34px; padding: 16px 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+nav.contents h2 { margin: 0 0 10px; padding: 0; border: 0; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+nav.contents ol { margin: 0; padding-left: 1.4rem; columns: 2; column-gap: 28px; }
+nav.contents li { margin: 3px 0; break-inside: avoid; }
+nav.contents li a { text-decoration: none; color: var(--dim); font-size: 15px; }
+nav.contents li a:hover { color: var(--fg); }
+nav.contents li a[aria-current] { color: var(--amber); font-weight: 600; }
+@media (max-width: 620px) { nav.contents ol { columns: 1; } }
+
+/* --- the pictures --- */
+.figs { display: flex; flex-wrap: wrap; gap: 22px; margin: 8px 0 28px; }
+figure { margin: 0; flex: 0 1 auto; max-width: 100%; }
+figure img { display: block; max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--line); }
+figure.shot img { width: 240px; image-rendering: pixelated; box-shadow: 0 10px 30px rgba(0, 0, 0, .55); }
+figure.wide { flex: 1 1 100%; }
+figure.wide img { width: 100%; }
+figcaption { font: 12px var(--f-mono); color: var(--faint); margin-top: 8px; letter-spacing: .04em; }
+
+/* --- the tag line under the name on the front page --- */
+.tagline { color: var(--dim); font: 500 15px var(--f-mono); letter-spacing: .06em; margin: 0 0 20px; }
