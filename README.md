@@ -69,6 +69,31 @@ keys, the storage, the audio. It is how the interface was developed, and how it 
 app/build/host/anatomix_host app/tests/screens.txt app/build/shots
 ```
 
+## Releasing it
+
+A tag is the release:
+
+```sh
+git tag -a v0.2 -m "ANATOMIX VOXINATOR 0.2 ..." && git push origin v0.2
+```
+
+That runs three workflows: the **build and test** on `main`, then the **release** (the shared FM-1 builder
+makes the package from that commit and attests it, so the Firmware Hub can show the firmware as built from
+source), and then the **site** — the front page, the web installer, the browser emulator and the manual,
+built from the release's own attested package. The site is at
+**https://profikid.github.io/fm1-anatomix-voxinator/**.
+
+Two things have to be in place in the repository's settings, or the deployment is refused:
+
+- **Pages**: the source is **GitHub Actions** (the `pages.yml` workflow publishes it).
+- **The `github-pages` environment**: its deployment branch policy must allow the release tags — the branch
+  `main` **and** the tag pattern `v*`. With only `main` allowed, the deployment of a tagged release is
+  rejected ("Tag \"v0.1\" is not allowed to deploy to github-pages due to environment protection rules").
+
+To rebuild the site for a release that is already published (the package comes from the release, not from
+the artifact), run the **Build and publish the site** workflow by hand with `version` and
+`package-from: release`.
+
 ## The platform, and the two changes it needs
 
 The microphone capture is **the platform's** work, not the app's: the FM-1 is the USB *host*, the capture
