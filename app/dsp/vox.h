@@ -23,6 +23,7 @@
 /* the sizes: the memory is tight (96 KiB of RAM for the app, 336 KiB of pool for the big buffers) */
 #define VOX_PSOLA_RING 2048u            /* the shifter's analysis ring: 46 ms at 44.1 kHz */
 #define VOX_OLA_LEN 2048u               /* the overlap-add's accumulator: the block plus two grains */
+#define VOX_PSOLA_CORR_WIN 256u         /* the alignment's comparison window, in output samples */
 #define VOX_FORMANT_ORDER 12u           /* the LPC order: enough for F5 (5000 Hz) */
 #define VOX_FX_DELAY_MAX 16384u         /* the delay line: 372 ms at 44.1 kHz, 16-bit */
 #define VOX_FX_REVERB_MAX 8192u         /* the reverb's line: 186 ms at 44.1 kHz, 16-bit */
@@ -214,7 +215,7 @@ typedef struct {
     float ana;                         /* the shifter's content clock */
     float frac_acc;                    /* the content step's accumulator */
     uint8_t have_tail;                 /* the shifter has a tail to align against */
-    float tail[64];                    /* the alignment's correlation tail */
+    float tail[VOX_PSOLA_CORR_WIN];      /* the alignment's correlation tail: one window's worth */
     /* the formant filter */
     float lpc_a[VOX_FORMANT_ORDER + 1u];
     float lpc_b[VOX_FORMANT_ORDER + 1u];

@@ -186,7 +186,7 @@ The delay and the reverb lines are the only big buffers in the engine, and they 
 to the DSP: the app puts them in the platform's RAM pool and hands the pointers over
 (`vox_buffers_t`). The DSP stays platform-free and never allocates. The same goes for the shifters' rings
 and accumulators: four voices with a ring and an accumulator each would be 96 KiB of the engine's own
-state, so they live in the pool too and the engine's state shrank from 104,848 bytes to 28,200.
+state, so they live in the pool too and the engine's state shrank from 104,848 bytes to 31,272.
 
 ### The memory
 
@@ -194,7 +194,7 @@ The app's own buffers, and where they live:
 
 | What | Where | How much |
 |---|---|---|
-| the engine's state (the detectors, the four voices, the working buffers) | `.bss` (the app's RAM) | 28,200 B |
+| the engine's state (the detectors, the four voices, the working buffers) | `.bss` (the app's RAM) | 31,272 B |
 | the app's own state (the settings, the user presets, the interface's scratch) | `.bss` | ~2 KiB |
 | the effect's delay lines (2 × 16384 samples, 16-bit) | the pool | 64 KiB |
 | the effect's reverb lines (2 × 8192 samples, 16-bit) | the pool | 32 KiB |
