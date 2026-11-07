@@ -37,7 +37,7 @@
 #include "vox_math.h"
 
 #define OLA_MASK (VOX_OLA_LEN - 1u)     /* the accumulator's index mask */
-#define CORR_WIN 256u                   /* the alignment's comparison window, in output samples */
+#define CORR_WIN VOX_PSOLA_CORR_WIN     /* the alignment's comparison window, in output samples */
 #define CORR_STRIDE 2u                  /* the correlation's taps are decimated by this */
 #define SEARCH_MAX 256u                 /* the alignment's widest search, in output samples */
 #define MIN_RATIO 0.5f                  /* the lowest shift: an octave down */
@@ -45,6 +45,11 @@
 #define MIN_PERIOD 32.0f                /* the shortest period the shifter accepts (1380 Hz) */
 #define MAX_PERIOD 400.0f               /* and the longest (110 Hz) */
 #define PERIOD_SMOOTH 0.25f             /* how much of the new period is taken (the rest is kept) */
+
+/* the tail is the window's worth of samples: it must hold every sample the loops below touch, or the
+ * window's tail runs into the formant filter's own state */
+_Static_assert(sizeof(((vox_voice_t *)0)->tail) / sizeof(float) >= CORR_WIN,
+               "the correlation tail must hold the comparison window");
 
 /* the shifter's reset */
 void vox_shift_init(vox_voice_t *v)

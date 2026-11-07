@@ -195,7 +195,7 @@ static void test_shifter(void)
                 CHECK(0, "the +24 shift produced %.3f at %u", (double)out[i], i);
                 break;
             }
-        CHECK(1, "");
+        CHECK(1, "%s", "ok");
     }
 }
 
@@ -231,7 +231,7 @@ static void test_effects_finite(void)
             }
         }
     }
-    CHECK(1, "");
+    CHECK(1, "%s", "ok");
 }
 
 static void test_delay_bounded(void)

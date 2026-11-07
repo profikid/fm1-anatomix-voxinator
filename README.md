@@ -94,7 +94,7 @@ this repository and needs nothing from the platform but those six functions.
 
 | | |
 |---|---|
-| the engine's state | 28,200 B of the app's 96 KiB of RAM |
+| the engine's state | 31,272 B of the app's 96 KiB of RAM |
 | the app's pool (the delay, the reverb, the shifters' rings, the jitter buffer) | 168 KiB |
 | the base's own pool (the canvas, the capture's ring, the mirror, the words) | 102 KiB |
 | **the pool's total** | **270 KiB of 336 KiB** (66 KiB spare) |
