@@ -549,7 +549,7 @@ const char *ui_page_name(int page)
     case PG_MULTIVOICE: return "MULTIVOICE";
     case PG_GLIDE:      return "GLIDE";
     case PG_FORMANT:    return "FORMANT";
-    case PG_FX:         return "FX";
+    case PG_FX:         return "EFFECTS";
     case PG_PRESETS:    return "PRESETS";
     case PG_INPUT:      return "INPUT";
     case PG_GLOBAL:     return "GLOBAL";

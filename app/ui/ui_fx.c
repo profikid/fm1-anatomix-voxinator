@@ -33,7 +33,7 @@ void ui_draw_fx(app_state_t *a, int32_t x, int32_t y, int32_t w, int32_t h)
     ui_anatomy_in(a, &in);
     ui_anatomy_step(a, &in);
 
-    ui_band_header(a, "FX", vox_fx_name(a->engine.set.fx[fx].type), x, y, w);
+    ui_band_header(a, "EFFECTS", vox_fx_name(a->engine.set.fx[fx].type), x, y, w);
     cv_begin(w, 176, AN_DARK);
     /* the picture, small, on the left */
     anatomy_draw_head(&a->anatomy, &in, 0, 0, 140, 103);
