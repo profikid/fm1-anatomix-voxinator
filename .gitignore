@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (C) 2026 Charles Vestal
+# The build's output and the editor's litter: nothing here belongs in the repository.
+build/
+app/build/
+.DS_Store
+*.o
+*.d
