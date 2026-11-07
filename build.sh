@@ -9,6 +9,7 @@
 #   ./build.sh test               the DSP's tests (plain cc, no toolchain needed)
 #   ./build.sh audio              the microphone path in the simulator (the tones and the checks)
 #   ./build.sh shots              the screens in the simulator: app/build/shots/*.png
+#   ./build.sh docs               the manual's screen images: app/docs/img/*.png (from the shots)
 #   ./build.sh info               what the connected FM-1 is running
 #   ./build.sh flash [FILE]       install over USB-MIDI (default app/build/anatomix.fwsc)
 # JIELI_TOOLCHAIN, AC79_SDK and PYTHON override the defaults (~/.jieli/toolchain, ~/fw-AC79_AIoT_SDK, python3).
@@ -35,6 +36,16 @@ case "$1" in
         mkdir -p app/build/shots
         app/build/host/anatomix_host app/tests/screens.txt app/build/shots
         echo "build.sh: the screens are in app/build/shots/"
+        exit ;;
+    docs)
+        shift
+        # the manual's screen images, from the shots: the manual never shows a screen the firmware
+        # does not draw (a picture that has drifted is worse than no picture)
+        "$PY" base/tools/build.py app --host
+        mkdir -p app/build/shots app/docs/img
+        app/build/host/anatomix_host app/tests/screens.txt app/build/shots
+        "$PY" tools/doc_images.py
+        echo "build.sh: the manual's images are in app/docs/img/"
         exit ;;
     info)
         exec "$PY" base/tools/fm1_install.py --info ;;
